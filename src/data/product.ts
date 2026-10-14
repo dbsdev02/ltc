@@ -1,109 +1,152 @@
+import vanillaBadge from "@/assets/brand/st-vanilla-cake.png";
+import fruitPunchBadge from "@/assets/brand/fruit-punch-badge.png";
+
 export const product = {
-  brand: "Lumelle",
+  id: "cloud-mist",
+  brand: "Little Todds Club",
   tagline: "A little mist. A lot of magic.",
-  name: "Moonmist",
-  category: "Hair & Body Mist for Kids",
-  price: "₹750",
-  size: "100 ml",
+  brandLine: "Safe little essentials for curious little humans",
+  name: "Cloud Mist",
+  category: "Toddler Skin & Hair Mist",
+  /** Price per bottle in rupees. */
+  price: 750,
+  size: "25 ml",
+  ageRange: "2 to 9 years",
   description:
-    "A gentle, moisturising hair & body mist created especially for little ones who want to smell as lovely as they feel. Made with fractionated coconut oil, Vitamin E and lots of love.",
-  ageRecommendation: "Update with the recommended age range on the final product label.",
-  cta: "SHOP THE MAGIC",
+    "A gentle, moisturising skin & hair mist made especially for little ones who want to smell as lovely as they feel. Made with fractionated coconut oil, Vitamin E and lots of love — and completely alcohol-free.",
+  cta: "SHOP CLOUD MIST",
   addToCartLabel: "ADD TO CART",
   buyNowLabel: "BUY NOW",
+  /** Applied to the whole order when the cart holds more than one bottle. */
+  multiUnitDiscount: { minQuantity: 2, percent: 10 },
   variants: [
-    { id: "moonmist", name: "Moonmist", badge: "Smells like Vanilla Cloud", icon: "🌙" },
-    { id: "sunbloom", name: "Sunbloom", badge: "Smells like Citrus Punch", icon: "☀️" },
+    {
+      id: "vanilla-cake",
+      name: "Vanilla Cake",
+      scent: "Smells like Vanilla Cake",
+      description: "Warm, sweet and cosy — like a slice of birthday cake fresh from the oven.",
+      icon: "🧁",
+      badgeImage: vanillaBadge,
+      inStock: true,
+    },
+    {
+      id: "fruit-punch",
+      name: "Fruit Punch",
+      scent: "Smells like Fruit Punch",
+      description: "Bright, juicy and playful — a happy splash of orange, apple and pineapple.",
+      icon: "🍹",
+      badgeImage: fruitPunchBadge,
+      inStock: false,
+    },
   ],
   trustPoints: [
-    { icon: "coconut", label: "Fractionated Coconut Oil" },
+    { icon: "coconut", label: "Coconut Oil" },
     { icon: "vitamin", label: "Vitamin E" },
-    { icon: "alcoholFree", label: "Alcohol & Toxins Free" },
+    { icon: "alcoholFree", label: "Alcohol & Toxin Free" },
     { icon: "gentle", label: "Gentle & Moisturising" },
     { icon: "vegan", label: "Vegan & Cruelty Free" },
     { icon: "love", label: "Made with Love" },
   ],
+  claims: ["Alcohol-free", "Toxin-free", "Vegan", "Cruelty-free", "Moisturising", "Mom-approved"],
   whatIsIt: {
     eyebrow: "The signature mist",
-    title: "What is Moonmist?",
-    text: "A gentle, moisturising hair & body mist created especially for little ones who want to smell as lovely as they feel. Made with fractionated coconut oil, Vitamin E and lots of love.",
+    title: "What is Cloud Mist?",
+    text: "Cloud Mist is a gentle toddler skin & hair mist crafted with nourishing ingredients to keep your little one soft, fresh and happy all day. A light spritz of fractionated coconut oil and Vitamin E — no alcohol, no harsh stuff, just a little cloud of happy.",
     linkLabel: "How to use",
   },
+  howToUse: [
+    "Shake well before use.",
+    "Ask your little one to close their eyes.",
+    "Spray lightly on skin or hair from a few inches away.",
+    "Use anytime for a fresh, moisturised feel.",
+  ],
   dailyMoments: {
-    title: "How Moonmist fits into their day",
+    title: "How Cloud Mist fits into their day",
     items: [
-      { icon: "hair", title: "Hair", text: "Soft, fresh & manageable" },
-      { icon: "body", title: "Body", text: "Keeps them feeling fresh" },
-      { icon: "travel", title: "Travel", text: "Easy to carry, perfect for on-the-go" },
-      { icon: "playdates", title: "Playdates", text: "For all their little adventures" },
+      { icon: "morning", title: "Morning Routine", text: "A happy spritz after bath time" },
+      { icon: "travel", title: "Travel", text: "25 ml — tiny enough for every bag" },
+      { icon: "playdates", title: "Playdates", text: "Fresh for all their little adventures" },
+      { icon: "goingOut", title: "Going Out", text: "Their very own grown-up moment" },
     ],
   },
   moment: {
-    title: "The Moonmist Moment",
-    text: "Soft, dreamy and simply irresistible. Smells like a happy bedtime story.",
+    eyebrow: "Smells like dessert",
+    title: "The Vanilla Cake Moment",
+    text: "Sweet, soft and simply irresistible. One little spritz and they're wrapped in a cloud of warm vanilla cake — the fragrance that makes getting ready the best part of the day.",
   },
   founder: {
     eyebrow: "Our story",
     title: "It started with a little girl who wanted to smell like her parents.",
-    text: "Our daughter wanted to wear fragrance too. But no fragrance felt right for her delicate skin. So we decided to make it ourselves — a gentle, moisturising mist for their hair and body, made with the purest form of coconut oil and lots of love.",
-    name: "Meet the Founder",
-    role: "Founder & Parent",
+    text: "Our daughter wanted to wear perfume too. But no fragrance felt right for her delicate skin — most were full of alcohol and ingredients we couldn't pronounce. So we decided to make it ourselves: a gentle, moisturising mist for her hair and body, made with the purest form of coconut oil and lots of love. Little Todds Club is everything we'd use on our own toddler first.",
+    name: "Shraddha Goel",
+    role: "Creator Mom & Founder",
+    handle: "@aisishraddha",
+    /** Set to an imported image once a real founder photo is available. */
+    photo: null as string | null,
   },
-  testimonials: [
-    {
-      quote:
-        "My daughter absolutely loves using it before going out. The smell is so lovely and it's gentle on her skin.",
-      name: "Parent review placeholder",
-      location: "Placeholder city",
-    },
-    {
-      quote:
-        "Such a fun little part of our getting-ready routine. Finally a fragrance that's safe for kids.",
-      name: "Parent review placeholder",
-      location: "Placeholder city",
-    },
-    {
-      quote: "We took it on our vacation and it was a lifesaver. Everyone asked what it was!",
-      name: "Parent review placeholder",
-      location: "Placeholder city",
-    },
-  ],
+  promise: {
+    title: "Welcome to the club",
+    text: "More than a brand, we're a club for modern parents and their little explorers. Let's raise happy, kind and curious little humans together.",
+    pillars: ["Thoughtfully crafted", "Loved by our toddler", "Trusted by you"],
+  },
+  prBox: {
+    eyebrow: "Coming soon",
+    title: "Claim your Little Todds Club PR box",
+    text: "Are you a parent creator? Our welcome box — with Cloud Mist, little surprises and a sticker sheet made for tiny hands — is almost ready. Tell us you'd like one and we'll reach out as soon as boxes open up.",
+  },
+  /**
+   * Only publish genuine reviews that customers have agreed to share.
+   * The reviews section stays hidden while this list is empty.
+   */
+  testimonials: [] as { quote: string; name: string; location: string }[],
   faqs: [
     {
-      q: "Is the perfume alcohol-free?",
-      a: "Yes. This product is positioned as an alcohol-free fragrance. Confirm the wording against the final formulation and label before launch.",
+      q: "What is Cloud Mist?",
+      a: "Cloud Mist is a gentle, alcohol-free skin & hair mist made for toddlers and little kids. It's made with fractionated coconut oil and Vitamin E, so it lightly moisturises while leaving a soft, sweet fragrance.",
     },
     {
-      q: "Is it suitable for children?",
-      a: "It is made specifically for kids. Add the exact recommended age range shown on the final product label here.",
+      q: "What age is it suitable for?",
+      a: "Cloud Mist is made for little ones aged 2 to 9 years.",
     },
     {
-      q: "What ingredients are used?",
-      a: "Add the complete, verified ingredient list from the final product packaging here.",
+      q: "Does it contain alcohol?",
+      a: "No. Cloud Mist is completely alcohol-free and toxin-free. It is also vegan and cruelty-free.",
     },
     {
-      q: "How should it be applied?",
-      a: "Follow the directions on the final product label. Replace this text with those exact directions before launch.",
+      q: "Can it be used on hair and body?",
+      a: "Yes! Spray lightly on skin or hair from a few inches away. Ask your little one to close their eyes while you spritz, and avoid the face, eyes and any broken or irritated skin.",
     },
     {
-      q: "Can it be used every day?",
-      a: "Daily-use guidance should follow the final formulation and product label instructions.",
+      q: "What does it smell like?",
+      a: "Vanilla Cake smells warm, sweet and cosy — just like dessert. Fruit Punch (currently sold out) is bright and juicy, with notes of orange, apple and pineapple.",
     },
     {
       q: "What if my child has sensitive skin?",
-      a: "Check the full ingredient list, follow any patch-test guidance on the label, and consult a qualified professional if you have concerns.",
+      a: "Every child is different, so we recommend a patch test before first use: spray a little on the inner arm and wait 24 hours. If you notice any redness or irritation, stop using it. Please check the full ingredient list on the pack and consult your paediatrician if you have any concerns.",
     },
     {
-      q: "How long does the fragrance last?",
-      a: "Add a duration based on verified product testing.",
+      q: "How should I store it?",
+      a: "Store in a cool, dry place away from direct sunlight, with the cap closed. Keep out of reach of children when not in use — it's a grown-up-supervised treat!",
     },
     {
-      q: "What is your return policy?",
-      a: "Add the business's final return and refund policy here before launch.",
+      q: "Do you offer a discount on more than one bottle?",
+      a: "Yes — buy 2 or more bottles and get 10% off your whole order. The discount is applied automatically in your cart.",
+    },
+    {
+      q: "How long does shipping take?",
+      a: "Orders are dispatched within 1–3 business days and usually arrive within 3–7 business days across India. See our Shipping Policy for details.",
+    },
+    {
+      q: "Can I return the product?",
+      a: "As Cloud Mist is a personal care product, we can't accept returns of opened bottles. If your order arrives damaged, leaking or incorrect, write to us within 48 hours of delivery and we'll make it right. See our Returns & Cancellation Policy.",
     },
   ],
-  shipping:
-    "Shipping, inventory, cart, and payment connections are placeholders until checkout is configured.",
 } as const;
 
 export type Product = typeof product;
+
+export function getVariant(id: string) {
+  return product.variants.find((variant) => variant.id === id);
+}
+
+export type Variant = (typeof product.variants)[number];

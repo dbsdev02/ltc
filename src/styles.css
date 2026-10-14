@@ -20,7 +20,7 @@
 
 @theme inline {
   --font-display: "Nunito", sans-serif;
-  --font-sans: "Manrope", sans-serif;
+  --font-sans: "Quicksand", "Nunito", sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -68,36 +68,43 @@
   --color-footer-muted: var(--footer-muted);
   --color-footer-border: var(--footer-border);
   --color-footer-input: var(--footer-input);
+  --color-sky: var(--sky);
+  --color-sage: var(--sage);
+  --color-coral: var(--coral);
 }
 
 :root {
+  /* Little Todds Club palette: warm milk, oat beige, sage, powder blue, dusty coral, butter yellow, moss */
   --radius: 1rem;
-  --background: oklch(0.98 0.018 85);
-  --foreground: oklch(0.32 0.06 165);
+  --background: oklch(0.985 0.012 85);
+  --foreground: oklch(0.37 0.035 128);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.32 0.06 165);
+  --card-foreground: oklch(0.37 0.035 128);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.32 0.06 165);
-  --primary: oklch(0.83 0.135 86);
-  --primary-foreground: oklch(0.28 0.06 60);
-  --secondary: oklch(0.94 0.035 165);
-  --secondary-foreground: oklch(0.32 0.07 165);
-  --muted: oklch(0.96 0.015 85);
-  --muted-foreground: oklch(0.52 0.035 155);
-  --accent: oklch(0.85 0.085 32);
-  --accent-foreground: oklch(0.3 0.06 30);
+  --popover-foreground: oklch(0.37 0.035 128);
+  --primary: oklch(0.87 0.12 88);
+  --primary-foreground: oklch(0.32 0.045 70);
+  --secondary: oklch(0.94 0.028 125);
+  --secondary-foreground: oklch(0.36 0.04 128);
+  --muted: oklch(0.965 0.015 85);
+  --muted-foreground: oklch(0.5 0.025 128);
+  --accent: oklch(0.68 0.12 42);
+  --accent-foreground: oklch(0.99 0.01 85);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.9 0.025 90);
-  --input: oklch(0.9 0.025 90);
-  --ring: oklch(0.78 0.13 86);
-  --cream: oklch(0.965 0.022 85);
-  --gold: oklch(0.78 0.14 78);
-  --footer: oklch(0.24 0.055 165);
-  --footer-foreground: oklch(0.96 0.02 85);
-  --footer-muted: oklch(0.68 0.035 150);
-  --footer-border: oklch(0.33 0.05 165);
-  --footer-input: oklch(0.28 0.05 165);
+  --border: oklch(0.9 0.022 85);
+  --input: oklch(0.88 0.022 85);
+  --ring: oklch(0.72 0.1 42);
+  --cream: oklch(0.955 0.03 80);
+  --gold: oklch(0.8 0.14 80);
+  --sky: oklch(0.86 0.035 240);
+  --sage: oklch(0.7 0.045 125);
+  --coral: oklch(0.72 0.11 40);
+  --footer: oklch(0.955 0.022 85);
+  --footer-foreground: oklch(0.37 0.035 128);
+  --footer-muted: oklch(0.5 0.025 128);
+  --footer-border: oklch(0.88 0.022 85);
+  --footer-input: oklch(0.98 0.01 85);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -154,6 +161,7 @@
   }
 
   body {
+    font-weight: 500;
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
@@ -194,7 +202,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: color-mix(in oklab, var(--primary) 70%, var(--foreground));
+  color: var(--accent);
   font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -359,11 +367,104 @@
   background: color-mix(in oklab, var(--foreground) 15%, transparent);
   filter: blur(12px);
 }
-.bg-footer a {
+.footer-heading {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--footer-foreground);
+}
+.footer-link:not(.flex) {
   display: block;
 }
-.bg-footer a:hover {
-  color: var(--footer-foreground);
+.footer-link {
+  color: var(--footer-muted);
+  font-weight: 600;
+}
+.footer-link:hover {
+  color: var(--accent);
+}
+.form-field {
+  display: block;
+  width: 100%;
+  border-radius: 0.85rem;
+  border: 1.5px solid var(--input);
+  background: var(--card);
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--foreground);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+.form-field:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 18%, transparent);
+}
+.form-field[aria-invalid="true"] {
+  border-color: var(--destructive);
+}
+.policy-prose {
+  color: var(--foreground);
+  font-size: 0.98rem;
+  line-height: 1.8;
+  font-weight: 500;
+}
+.policy-prose h2 {
+  margin-top: 2.5rem;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  scroll-margin-top: 8rem;
+}
+.policy-prose h3 {
+  margin-top: 1.5rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+.policy-prose p,
+.policy-prose ul,
+.policy-prose ol {
+  margin-top: 0.85rem;
+  color: color-mix(in oklab, var(--foreground) 85%, transparent);
+}
+.policy-prose ul {
+  list-style: disc;
+  padding-left: 1.4rem;
+}
+.policy-prose ol {
+  list-style: decimal;
+  padding-left: 1.4rem;
+}
+.policy-prose li + li {
+  margin-top: 0.35rem;
+}
+.policy-prose a {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.policy-prose strong {
+  font-weight: 700;
+  color: var(--foreground);
+}
+[id] {
+  scroll-margin-top: 7rem;
+}
+.float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(3deg);
+  }
 }
 @media (max-width: 767px) {
   .section-space {
