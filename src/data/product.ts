@@ -1,5 +1,7 @@
 import vanillaBadge from "@/assets/brand/st-vanilla-cake.png";
 import fruitPunchBadge from "@/assets/brand/fruit-punch-badge.png";
+import vanillaSlide from "@/assets/brand/slide-vanilla-cake.webp";
+import fruitPunchSlide from "@/assets/brand/slide-fruit-punch.webp";
 
 export const product = {
   id: "cloud-mist",
@@ -69,11 +71,25 @@ export const product = {
       { icon: "goingOut", title: "Going Out", text: "Their very own grown-up moment" },
     ],
   },
-  moment: {
-    eyebrow: "Smells like dessert",
-    title: "The Vanilla Cake Moment",
-    text: "Sweet, soft and simply irresistible. One little spritz and they're wrapped in a cloud of warm vanilla cake — the fragrance that makes getting ready the best part of the day.",
-  },
+  moments: [
+    {
+      variantId: "vanilla-cake",
+      eyebrow: "Smells like dessert",
+      title: "The Vanilla Cake Moment",
+      text: "Sweet, soft and simply irresistible. One little spritz and they're wrapped in a cloud of warm vanilla cake — the fragrance that makes getting ready the best part of the day.",
+      image: vanillaSlide,
+      imageAlt: "Cloud Mist Vanilla Cake beside a slice of vanilla cake — smells like dessert",
+    },
+    {
+      variantId: "fruit-punch",
+      eyebrow: "Smells like fruit juice",
+      title: "The Fruit Punch Moment",
+      text: "Bright, juicy and playful. A happy splash of orange, apple and pineapple that smells like a glass of fresh fruit juice on a sunny afternoon.",
+      image: fruitPunchSlide,
+      imageAlt:
+        "Smells like Fruit Punch — a glass of juice with orange, apple, pineapple and grapes",
+    },
+  ],
   founder: {
     eyebrow: "Our story",
     title: "It started with a little girl who wanted to smell like her parents.",
@@ -85,7 +101,7 @@ export const product = {
     photo: null as string | null,
   },
   promise: {
-    title: "Welcome to the club",
+    title: "Let us welcome you to the Club!",
     text: "More than a brand, we're a club for modern parents and their little explorers. Let's raise happy, kind and curious little humans together.",
     pillars: ["Thoughtfully crafted", "Loved by our toddler", "Trusted by you"],
   },
@@ -135,6 +151,10 @@ export const product = {
     {
       q: "How long does shipping take?",
       a: "Orders are dispatched within 1–3 business days and usually arrive within 3–7 business days across India. See our Shipping Policy for details.",
+    },
+    {
+      q: "Why is there no COD?",
+      a: "We produce limited batches to maintain quality and cannot risk even a single bottle being lost because of Cash on Delivery issues. We also think that conscious parents would know if it is right for their child or not.",
     },
     {
       q: "Can I return the product?",

@@ -1,4 +1,4 @@
-const whatsappNumber = "918105938699";
+const whatsappNumber = "919873193332";
 
 export const site = {
   name: "Little Todds Club",
@@ -17,8 +17,8 @@ export const site = {
   },
   contact: {
     email: "littletoddsclub@gmail.com",
-    phone: "+91 81059 38699",
-    phoneHref: "tel:+918105938699",
+    phone: "+91 98731 93332",
+    phoneHref: "tel:+919873193332",
     whatsappNumber,
     whatsappHref: `https://wa.me/${whatsappNumber}`,
     hours: "Monday to Saturday, 10 am – 6 pm IST",
@@ -26,7 +26,7 @@ export const site = {
   grievanceOfficer: {
     name: "Shraddha Goel",
     email: "littletoddsclub@gmail.com",
-    phone: "+91 81059 38699",
+    phone: "+91 98731 93332",
   },
   social: {
     instagram: "https://www.instagram.com/littletoddsclub",

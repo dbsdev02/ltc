@@ -1,12 +1,11 @@
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowRight,
   Ban,
-  Check,
   ChevronLeft,
   ChevronRight,
   Cloud,
@@ -29,16 +28,14 @@ import {
 import boxFront from "@/assets/brand/box-front.jpg";
 import hamperBox from "@/assets/brand/hamper-box.jpg";
 import logoVertical from "@/assets/brand/logo-vertical.png";
+import whatIsCloudMist from "@/assets/brand/what-is-cloud-mist.webp";
 import stickerBear from "@/assets/brand/st-bear.png";
 import stickerBunny from "@/assets/brand/st-bunny.png";
 import stickerCloud from "@/assets/brand/st-cloud.png";
-import stickerCoconut from "@/assets/brand/st-coconut.png";
 import stickerCupcake from "@/assets/brand/st-cupcake.png";
-import stickerMoon from "@/assets/brand/st-moon.png";
 import stickerRainbow from "@/assets/brand/st-rainbow.png";
 import stickerSun from "@/assets/brand/st-sun.png";
-import stickerVanilla from "@/assets/brand/st-vanilla-cake.png";
-import { product, type Variant } from "@/data/product";
+import { getVariant, product, type Variant } from "@/data/product";
 import { site, whatsappLink } from "@/data/site";
 import { Button } from "@/components/ui/button";
 import { QuantityStepper } from "@/components/site/QuantityStepper";
@@ -365,27 +362,14 @@ function WhatIsIt() {
     <section id="what-is-it" className="section-space bg-background">
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 lg:grid-cols-2 lg:px-10">
         <Reveal className="order-2 lg:order-1">
-          <div className="relative mx-auto aspect-[16/12] max-w-xl overflow-hidden rounded-[2.5rem] bg-sky/50">
-            <Sticker
-              src={stickerCloud}
-              className="float-slow left-1/2 top-[14%] w-[46%] -translate-x-1/2"
-            />
-            <Sticker
-              src={stickerCoconut}
-              className="float-slow bottom-[10%] left-[12%] w-[22%] [animation-delay:-2s]"
-            />
-            <Sticker
-              src={stickerMoon}
-              className="float-slow right-[10%] top-[10%] w-[14%] [animation-delay:-4s]"
-            />
-            <div className="absolute inset-x-6 bottom-6 flex flex-wrap justify-end gap-2">
-              {["Fractionated coconut oil", "Vitamin E", "No alcohol"].map((chip) => (
-                <span key={chip} className="badge-pill bg-background/90">
-                  <Check className="size-3.5 text-accent" /> {chip}
-                </span>
-              ))}
-            </div>
-          </div>
+          <img
+            src={whatIsCloudMist}
+            alt="Cloud Mist bottle in a sunny nursery — made with coconut oil and Vitamin E, with no alcohol"
+            width={1200}
+            height={900}
+            loading="lazy"
+            className="mx-auto aspect-[4/3] w-full max-w-xl rounded-[2.5rem] object-cover shadow-soft"
+          />
         </Reveal>
         <Reveal className="order-1 lg:order-2">
           <p className="eyebrow">{product.whatIsIt.eyebrow}</p>
@@ -453,33 +437,127 @@ function DailyMoments() {
 }
 
 function MomentBanner() {
+  const reduced = useReducedMotion();
+  const slides = product.moments;
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const slide = slides[index] ?? slides[0];
+  const variant = getVariant(slide.variantId);
+  const go = (delta: number) =>
+    setIndex((current) => (current + delta + slides.length) % slides.length);
+
+  useEffect(() => {
+    if (reduced || paused || slides.length < 2) return;
+    const timer = window.setTimeout(() => go(1), 6000);
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index, reduced, paused, slides.length]);
+
   return (
-    <section className="section-space bg-background">
+    <section
+      aria-roledescription="carousel"
+      aria-label="Scents"
+      className="section-space bg-background"
+    >
       <div className="mx-auto max-w-7xl px-5 lg:px-10">
         <Reveal>
-          <div className="grid items-center overflow-hidden rounded-[2.5rem] bg-[color-mix(in_oklab,var(--coral)_18%,var(--background))] lg:grid-cols-2">
-            <div className="relative aspect-[16/10] w-full">
-              <Sticker
-                src={stickerVanilla}
-                className="float-slow left-1/2 top-1/2 w-[42%] -translate-x-1/2 -translate-y-1/2"
-              />
-              <Sticker
-                src={stickerCupcake}
-                className="float-slow bottom-[8%] left-[10%] w-[16%] [animation-delay:-2s]"
-              />
-              <Sticker
-                src={stickerSun}
-                className="float-slow right-[10%] top-[8%] w-[16%] [animation-delay:-4s]"
-              />
-            </div>
-            <div className="px-6 pb-10 text-center lg:px-12 lg:py-10 lg:text-left">
-              <p className="eyebrow justify-center lg:justify-start">{product.moment.eyebrow}</p>
-              <h2 className="section-title">{product.moment.title}</h2>
-              <p className="section-copy mx-auto lg:mx-0">{product.moment.text}</p>
-              <Button size="lg" className="mt-7" onClick={scrollToShop}>
-                {product.cta}
-              </Button>
-            </div>
+          <div
+            className="relative overflow-hidden rounded-[2.5rem] bg-[color-mix(in_oklab,var(--coral)_18%,var(--background))]"
+            onPointerEnter={() => setPaused(true)}
+            onPointerLeave={() => setPaused(false)}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={slide.variantId}
+                className="grid items-center lg:grid-cols-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: reduced ? 0 : 0.35 }}
+              >
+                <div className="relative flex aspect-[16/10] w-full items-center justify-center">
+                  {slide.variantId === "vanilla-cake" ? (
+                    <img
+                      src={slide.image}
+                      alt={slide.imageAlt}
+                      width={1280}
+                      height={800}
+                      loading="lazy"
+                      className="size-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={slide.image}
+                      alt={slide.imageAlt}
+                      width={800}
+                      height={800}
+                      loading="lazy"
+                      className="h-[92%] w-auto object-contain mix-blend-multiply"
+                    />
+                  )}
+                </div>
+                <div className="px-6 pb-16 text-center lg:px-12 lg:py-10 lg:text-left">
+                  <p className="eyebrow justify-center lg:justify-start">{slide.eyebrow}</p>
+                  <h2 className="section-title">{slide.title}</h2>
+                  <p className="section-copy mx-auto lg:mx-0">{slide.text}</p>
+                  {variant?.inStock ? (
+                    <Button size="lg" className="mt-7" onClick={scrollToShop}>
+                      {product.cta}
+                    </Button>
+                  ) : (
+                    <Button
+                      asChild
+                      size="lg"
+                      variant="secondary"
+                      className="mt-7 border-foreground/20"
+                    >
+                      <a
+                        href={whatsappLink(
+                          `Hi! Please let me know when ${product.name} – ${variant?.name} is back in stock.`,
+                        )}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Sold out · Notify me
+                      </a>
+                    </Button>
+                  )}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {slides.length > 1 && (
+              <div className="absolute inset-x-0 bottom-4 flex items-center justify-center gap-3 lg:inset-x-auto lg:bottom-6 lg:right-8">
+                <Button
+                  variant="icon"
+                  size="icon"
+                  aria-label="Previous scent"
+                  onClick={() => go(-1)}
+                  className="size-9"
+                >
+                  <ChevronLeft className="size-4" />
+                </Button>
+                {slides.map((item, i) => (
+                  <button
+                    key={item.variantId}
+                    type="button"
+                    aria-label={`Show ${item.title}`}
+                    aria-current={i === index}
+                    onClick={() => setIndex(i)}
+                    className={`h-2 rounded-full transition-all ${i === index ? "w-6 bg-accent" : "w-2 bg-foreground/25"}`}
+                  />
+                ))}
+                <Button
+                  variant="icon"
+                  size="icon"
+                  aria-label="Next scent"
+                  onClick={() => go(1)}
+                  className="size-9"
+                >
+                  <ChevronRight className="size-4" />
+                </Button>
+              </div>
+            )}
           </div>
         </Reveal>
       </div>
