@@ -25,16 +25,13 @@ import {
   Truck,
   Users,
 } from "lucide-react";
-import boxFront from "@/assets/brand/box-front.jpg";
+import heroImage from "@/assets/brand/hero-vanilla-cake.webp";
 import hamperBox from "@/assets/brand/hamper-box.jpg";
 import logoVertical from "@/assets/brand/logo-vertical.png";
 import whatIsCloudMist from "@/assets/brand/what-is-cloud-mist.webp";
 import stickerBear from "@/assets/brand/st-bear.png";
 import stickerBunny from "@/assets/brand/st-bunny.png";
-import stickerCloud from "@/assets/brand/st-cloud.png";
-import stickerCupcake from "@/assets/brand/st-cupcake.png";
 import stickerRainbow from "@/assets/brand/st-rainbow.png";
-import stickerSun from "@/assets/brand/st-sun.png";
 import { getVariant, product, type Variant } from "@/data/product";
 import { site, whatsappLink } from "@/data/site";
 import { Button } from "@/components/ui/button";
@@ -112,19 +109,19 @@ function ProductStage() {
     const ctx = gsap.context(() => {
       gsap.fromTo(
         img,
-        { scale: 0.9, y: 30, rotate: -4 },
-        { scale: 1, y: 0, rotate: -2, duration: 1.1, ease: "back.out(1.5)" },
+        { scale: 0.95, y: 24 },
+        { scale: 1, y: 0, duration: 1.1, ease: "back.out(1.4)" },
       );
-      gsap.to(img, { y: -10, duration: 3, ease: "sine.inOut", repeat: -1, yoyo: true, delay: 1.1 });
+      gsap.to(img, { y: -8, duration: 3, ease: "sine.inOut", repeat: -1, yoyo: true, delay: 1.1 });
     }, stage);
 
-    gsap.set(img, { transformPerspective: 900 });
+    gsap.set(img, { transformPerspective: 1200 });
     const rotateY = gsap.quickTo(img, "rotationY", { duration: 0.6, ease: "power3" });
     const rotateX = gsap.quickTo(img, "rotationX", { duration: 0.6, ease: "power3" });
     const handleMove = (event: PointerEvent) => {
       const bounds = stage.getBoundingClientRect();
-      rotateY(((event.clientX - bounds.left) / bounds.width - 0.5) * 14);
-      rotateX(((event.clientY - bounds.top) / bounds.height - 0.5) * -10);
+      rotateY(((event.clientX - bounds.left) / bounds.width - 0.5) * 8);
+      rotateX(((event.clientY - bounds.top) / bounds.height - 0.5) * -6);
     };
     const handleLeave = () => {
       rotateY(0);
@@ -141,35 +138,15 @@ function ProductStage() {
   }, [reduced]);
 
   return (
-    <div
-      ref={stageRef}
-      className="relative mx-auto flex aspect-[4/5] w-full max-w-xl items-center justify-center overflow-hidden rounded-[2.5rem] bg-cream"
-    >
-      <span
-        aria-hidden="true"
-        className="absolute inset-x-10 top-16 bottom-16 rounded-full bg-sky/40 blur-3xl"
-      />
-      <Sticker src={stickerCloud} className="float-slow left-[6%] top-[7%] w-[22%]" />
-      <Sticker
-        src={stickerSun}
-        className="float-slow right-[6%] top-[5%] w-[18%] [animation-delay:-2s]"
-      />
-      <Sticker
-        src={stickerRainbow}
-        className="float-slow bottom-[6%] left-[5%] w-[20%] [animation-delay:-3s]"
-      />
-      <Sticker
-        src={stickerCupcake}
-        className="float-slow bottom-[7%] right-[7%] w-[15%] [animation-delay:-1s]"
-      />
+    <div ref={stageRef} className="relative mx-auto w-full max-w-md lg:max-w-lg">
       <img
         ref={imgRef}
-        src={boxFront}
-        alt={`${product.name} box — ${product.category} by ${product.brand}`}
-        width={443}
-        height={668}
+        src={heroImage}
+        alt={`A smiling little girl holding ${product.name} Vanilla Cake next to a slice of vanilla cake — smells like dessert`}
+        width={900}
+        height={1350}
         fetchPriority="high"
-        className="relative z-10 w-[58%] rounded-2xl shadow-float will-change-transform"
+        className="aspect-[2/3] w-full rounded-[2.5rem] object-cover shadow-float will-change-transform"
       />
     </div>
   );

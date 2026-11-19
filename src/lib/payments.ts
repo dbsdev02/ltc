@@ -1,19 +1,11 @@
-import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { getVariant, product } from "@/data/product";
-import { priceCart, sanitizeLines } from "@/lib/pricing";
+import type { CartLine, CartTotals } from "@/lib/pricing";
 
 /**
- * Razorpay integration. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in the
- * hosting environment (Vercel → Settings → Environment Variables). The secret
- * never leaves the server; the order amount is always recomputed here.
+ * Razorpay integration for static hosting (Hostinger). The browser never sees the
+ * secret: orders are created and verified by public/api/*.php, which read the keys
+ * from razorpay-config.php stored outside public_html and recompute the amount.
  */
-function getKeys() {
-  const keyId = process.env["RAZORPAY_KEY_ID"];
-  const keySecret = process.env["RAZORPAY_KEY_SECRET"];
-  return keyId && keySecret ? { keyId, keySecret } : null;
-}
-
 export const customerSchema = z.object({
   name: z.string().trim().min(2, "Please enter your full name").max(80),
   email: z.string().trim().email("Please enter a valid email"),
@@ -35,102 +27,49 @@ export const customerSchema = z.object({
 
 export type Customer = z.infer<typeof customerSchema>;
 
-const createOrderInput = z.object({
-  lines: z
-    .array(z.object({ variantId: z.string(), quantity: z.number().int().min(1).max(10) }))
-    .min(1)
-    .max(10),
-  customer: customerSchema,
-});
-
-const clip = (value: string) => value.slice(0, 250);
-
-export const createPaymentOrder = createServerFn({ method: "POST" })
-  .validator((data: unknown) => createOrderInput.parse(data))
-  .handler(async ({ data }) => {
-    const lines = sanitizeLines(data.lines);
-    if (lines.length === 0) {
-      return { ok: false as const, reason: "empty" as const };
+type CreateOrderResult =
+  | {
+      ok: true;
+      keyId: string;
+      orderId: string;
+      amount: number;
+      currency: string;
+      totals: CartTotals;
     }
-    const totals = priceCart(lines);
-    const keys = getKeys();
-    if (!keys) {
-      return { ok: false as const, reason: "not-configured" as const, totals };
-    }
-
-    const { customer } = data;
-    const items = lines
-      .map((line) => `${product.name} – ${getVariant(line.variantId)?.name} × ${line.quantity}`)
-      .join(", ");
-
-    const response = await fetch("https://api.razorpay.com/v1/orders", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        authorization: `Basic ${btoa(`${keys.keyId}:${keys.keySecret}`)}`,
-      },
-      body: JSON.stringify({
-        amount: totals.total * 100,
-        currency: "INR",
-        receipt: `ltc_${Date.now()}`,
-        notes: {
-          items: clip(items),
-          customer_name: clip(customer.name),
-          customer_email: clip(customer.email),
-          customer_phone: clip(customer.phone),
-          address: clip(customer.address),
-          city_state: clip(`${customer.city}, ${customer.state}`),
-          pincode: customer.pincode,
-          discount: String(totals.discount),
-        },
-      }),
-    });
-
-    if (!response.ok) {
-      console.error("Razorpay order creation failed", response.status, await response.text());
-      return { ok: false as const, reason: "gateway-error" as const, totals };
-    }
-
-    const order = (await response.json()) as { id: string; amount: number; currency: string };
-    return {
-      ok: true as const,
-      keyId: keys.keyId,
-      orderId: order.id,
-      amount: order.amount,
-      currency: order.currency,
-      totals,
+  | {
+      ok: false;
+      reason: "empty" | "invalid" | "not-configured" | "gateway-error";
+      totals?: CartTotals;
     };
-  });
 
-const verifyInput = z.object({
-  razorpay_order_id: z.string().min(1),
-  razorpay_payment_id: z.string().min(1),
-  razorpay_signature: z.string().min(1),
-});
-
-async function hmacSha256Hex(secret: string, message: string) {
-  const encoder = new TextEncoder();
-  const key = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
-  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(message));
-  return Array.from(new Uint8Array(signature), (byte) => byte.toString(16).padStart(2, "0")).join(
-    "",
-  );
+async function postJson<T>(url: string, body: unknown): Promise<T | null> {
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    return (await response.json()) as T;
+  } catch (error) {
+    console.error(`Request to ${url} failed`, error);
+    return null;
+  }
 }
 
-export const verifyPayment = createServerFn({ method: "POST" })
-  .validator((data: unknown) => verifyInput.parse(data))
-  .handler(async ({ data }) => {
-    const keys = getKeys();
-    if (!keys) return { verified: false };
-    const expected = await hmacSha256Hex(
-      keys.keySecret,
-      `${data.razorpay_order_id}|${data.razorpay_payment_id}`,
-    );
-    return { verified: expected === data.razorpay_signature };
-  });
+export async function createPaymentOrder({
+  data,
+}: {
+  data: { lines: readonly CartLine[]; customer: Customer };
+}): Promise<CreateOrderResult> {
+  const result = await postJson<CreateOrderResult>("/api/create-order.php", data);
+  return result ?? { ok: false, reason: "not-configured" };
+}
+
+export async function verifyPayment({
+  data,
+}: {
+  data: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string };
+}): Promise<{ verified: boolean }> {
+  const result = await postJson<{ verified: boolean }>("/api/verify-payment.php", data);
+  return { verified: result?.verified === true };
+}

@@ -33,3 +33,6 @@ dist-ssr
 
 .vercel
 .env
+
+# Razorpay keys (Hostinger) - never commit
+razorpay-config.php
