@@ -52,7 +52,7 @@ $env:DATABASE_URL="<Neon DIRECT connection string>"
 ## 3. Deploy the API (project `ltc-api`)
 
 Vercel → *Add New → Project* → import this repo → **Root Directory: `backend`** → Framework: FastAPI (auto-detected).
-Name the project **`ltc-api`** so its URL is `https://ltc-api.vercel.app` (if that name is taken,
+Name the project **`ltc-api`** so its URL is `https://ltc-793b.vercel.app` (if that name is taken,
 use another and update the rewrite in `frontend/vercel.json`).
 
 Environment variables (Production), see `backend/.env.example`:
@@ -69,7 +69,7 @@ Environment variables (Production), see `backend/.env.example`:
 | `RESEND_API_KEY`, `EMAIL_FROM`, `NOTIFY_EMAIL` | email |
 | `ENVIRONMENT` | `production` |
 
-Check: open `https://ltc-api.vercel.app/api/health` → `"database": true, "razorpay": true, …`.
+Check: open `https://ltc-793b.vercel.app/api/health` → `"database": true, "razorpay": true, …`.
 
 ## 4. Deploy the shop (project `ltc-web`)
 
