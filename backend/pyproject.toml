@@ -1,0 +1,31 @@
+[project]
+name = "ltc-api"
+version = "1.0.0"
+description = "Little Todds Club store API (FastAPI on Vercel)"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.117.1",
+    "pydantic[email]>=2.9",
+    "sqlalchemy>=2.0.36",
+    "pg8000>=1.31",
+    "alembic>=1.14",
+    "argon2-cffi>=23.1",
+    "pyjwt>=2.10",
+    "httpx>=0.28",
+    "cloudinary>=1.41",
+    "python-multipart>=0.0.20",
+    "tzdata>=2025.2",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.3", "uvicorn>=0.32"]
+
+[tool.vercel]
+entrypoint = "app.main:app"
+
+[tool.vercel.scripts]
+# Runs once per deployment (never per request): applies database migrations on production deploys.
+build = "python scripts/vercel_build.py"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -36,3 +36,11 @@ dist-ssr
 
 # Razorpay keys (Hostinger) - never commit
 razorpay-config.php
+hostinger-upload.zip
+
+# Backend (FastAPI)
+backend/.venv/
+backend/.env
+backend/**/__pycache__/
+backend/*.db
+.vercel/
