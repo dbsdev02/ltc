@@ -65,26 +65,30 @@ def send_order_confirmation(order: Order) -> None:
     s = get_settings()
     first = order.name.split(" ")[0]
     paid = order.payment_method != "cod"
-    send(
-        order.email,
-        f"Your {STORE_NAME} order {order.number} is confirmed",
-        f"Hi {first},\n\nThank you for joining the club! "
-        + ("Your payment was successful and your order is confirmed." if paid
-           else "Your cash-on-delivery order is confirmed — please keep the amount ready at delivery.")
-        + f"\n\n{order_summary(order)}\n\nWe dispatch within 1–3 business days and will email tracking details "
-        f"as soon as it ships.\n\nView your order: {s.frontend_url}/order-success?order={order.number}&token={order.access_token}"
-        f"\n\nWith love,\n{STORE_NAME}\n",
-        reply_to=s.notify_email,
-    )
+    if order.email:  # email is optional at checkout
+        send(
+            order.email,
+            f"Your {STORE_NAME} order {order.number} is confirmed",
+            f"Hi {first},\n\nThank you for joining the club! "
+            + ("Your payment was successful and your order is confirmed." if paid
+               else "Your cash-on-delivery order is confirmed — please keep the amount ready at delivery.")
+            + f"\n\n{order_summary(order)}\n\nWe dispatch within 1–3 business days and will email tracking details "
+            f"as soon as it ships.\n\nView your order: {s.frontend_url}/order-success?order={order.number}&token={order.access_token}"
+            f"\n\nWith love,\n{STORE_NAME}\n",
+            reply_to=s.notify_email,
+        )
     send(
         s.notify_email,
         f"New {'COD ' if not paid else ''}order {order.number} — {_inr(order.total)} from {order.name}",
-        f"A new order just came in.\n\n{order_summary(order)}\nEmail: {order.email}\n\nManage: {s.frontend_url}/admin?tab=orders&order={order.id}\n",
-        reply_to=order.email,
+        f"A new order just came in.\n\n{order_summary(order)}\nEmail: {order.email or 'not given'}\n\n"
+        f"Manage: {s.frontend_url}/admin?tab=orders&order={order.id}\n",
+        reply_to=order.email or None,
     )
 
 
 def send_shipped(order: Order) -> None:
+    if not order.email:
+        return
     first = order.name.split(" ")[0]
     tracking = f"Tracking: {order.tracking}\n\n" if order.tracking else ""
     send(

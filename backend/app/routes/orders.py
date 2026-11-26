@@ -26,7 +26,7 @@ def create_order(payload: OrderCreateIn, request: Request, db: DB, customer: Opt
         product_slug=payload.product_id,
         raw_lines=[(line.variant_id, line.quantity) for line in payload.lines],
         customer_fields={
-            "email": details.email,
+            "email": details.email or "",
             "name": details.name,
             "phone": details.phone,
             "address": details.address,
@@ -63,7 +63,7 @@ def read_order(number: str, db: DB, customer: OptionalCustomer, token: str = "")
     order = db.scalar(select(Order).where(Order.number == number).options(selectinload(Order.items)))
     allowed = order is not None and (
         (token and secrets.compare_digest(token, order.access_token))
-        or (customer is not None and (order.customer_id == customer.id or order.email == customer.email))
+        or (customer is not None and (order.customer_id == customer.id or (order.email != "" and order.email == customer.email)))
     )
     if not allowed:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Order not found.")

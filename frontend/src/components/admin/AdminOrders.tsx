@@ -364,11 +364,17 @@ function OrderDetail({ id, onBack }: { id: number; onBack: () => void }) {
             <p>
               <a className="text-accent hover:underline" href={`tel:${order.phone}`}>
                 {order.phone}
-              </a>{" "}
-              ·{" "}
-              <a className="text-accent hover:underline" href={`mailto:${order.email}`}>
-                {order.email}
               </a>
+              {order.email ? (
+                <>
+                  {" · "}
+                  <a className="text-accent hover:underline" href={`mailto:${order.email}`}>
+                    {order.email}
+                  </a>
+                </>
+              ) : (
+                <span className="text-muted-foreground"> · no email given</span>
+              )}
             </p>
             <p className="mt-2 text-muted-foreground">
               {order.address}, {order.city}, {order.state} {order.pincode}

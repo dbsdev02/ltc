@@ -47,7 +47,10 @@ function OrderSuccessPage() {
             : cod
               ? `Your order is confirmed! Please keep ${order ? formatINR(order.total) : "the amount"} ready — you'll pay in cash when it arrives.`
               : "Your order is confirmed and a little cloud of happy is on its way."}{" "}
-          We'll dispatch it within {site.shipping.dispatchDays} and email you the tracking details.
+          We'll dispatch it within {site.shipping.dispatchDays} and{" "}
+          {order && !order.email
+            ? "share the tracking details on your phone."
+            : "email you the tracking details."}
         </p>
         {number && (
           <p className="mt-5 rounded-full bg-cream px-4 py-2 text-sm font-bold">

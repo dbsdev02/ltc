@@ -49,6 +49,19 @@ def test_checkout_validation_messages(client):
     assert r.json()["detail"] == "Please enter a valid PIN code."
 
 
+def test_email_is_optional_at_checkout(client, monkeypatch):
+    from app.services import email
+
+    sent = []
+    monkeypatch.setattr(email, "send", lambda to, subject, text, reply_to=None: sent.append(to))
+    order = place_order(client, email="").json()
+    assert order["email"] == "" and order["number"].startswith("LTC-")
+    pay(client, order)
+    assert sent == ["littletoddsclub@gmail.com"]  # owner alert only, no customer email
+    assert place_order(client, email="not-an-email").status_code == 422
+    assert place_order(client, email="  ").status_code == 201
+
+
 def test_client_cannot_set_price(client):
     body = {"lines": [{"variantId": "vanilla-cake", "quantity": 1, "price": 1}], "customer": CUSTOMER, "total": 1}
     r = client.post("/api/orders", json=body)

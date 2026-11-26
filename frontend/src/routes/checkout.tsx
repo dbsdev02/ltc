@@ -84,7 +84,7 @@ function orderSummaryText(
     "",
     `Name: ${customer.name}`,
     `Phone: ${customer.phone}`,
-    `Email: ${customer.email}`,
+    ...(customer.email ? [`Email: ${customer.email}`] : []),
     `Address: ${customer.address}, ${customer.city}, ${customer.state} – ${customer.pincode}`,
   ].join("\n");
 }
@@ -205,7 +205,11 @@ function CheckoutPage() {
         order_id: gateway.razorpayOrderId,
         name: site.name,
         description: `${catalog.name} · ${totals.quantity} ${totals.quantity === 1 ? "bottle" : "bottles"} · ${gateway.orderNumber}`,
-        prefill: { name: customer.name, email: customer.email, contact: customer.phone },
+        prefill: {
+          name: customer.name,
+          contact: customer.phone,
+          ...(customer.email ? { email: customer.email } : {}),
+        },
         notes: { order_number: gateway.orderNumber },
         theme: { color: "#e08a5f" },
         modal: { ondismiss: () => setSubmitting(false) },
@@ -301,11 +305,12 @@ function CheckoutPage() {
                   {...register("name")}
                 />
               </Field>
-              <Field label="Email" error={errors.email?.message}>
+              <Field label="Email (optional)" error={errors.email?.message}>
                 <input
                   className="form-field"
                   type="email"
                   autoComplete="email"
+                  placeholder="For your order confirmation"
                   aria-invalid={!!errors.email}
                   {...register("email")}
                 />

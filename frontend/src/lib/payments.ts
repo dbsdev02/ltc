@@ -9,7 +9,8 @@ import type { CartLine } from "@/lib/pricing";
  */
 export const customerSchema = z.object({
   name: z.string().trim().min(2, "Please enter your full name").max(80),
-  email: z.string().trim().email("Please enter a valid email"),
+  // Optional: without it the customer just doesn't get order emails.
+  email: z.union([z.literal(""), z.string().trim().email("Please enter a valid email")]).optional(),
   phone: z
     .string()
     .trim()

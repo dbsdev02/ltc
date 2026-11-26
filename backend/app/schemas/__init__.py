@@ -113,7 +113,8 @@ class QuoteOut(Schema):
 
 class CustomerDetailsIn(Schema):
     name: Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=80)]
-    email: EmailStr
+    # Optional at checkout: without it the customer just doesn't get email updates.
+    email: EmailStr | None = None
     phone: Annotated[str, StringConstraints(strip_whitespace=True, pattern=PHONE_RE)]
     address: Annotated[str, StringConstraints(strip_whitespace=True, min_length=5, max_length=200)]
     city: Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=60)]
@@ -121,10 +122,15 @@ class CustomerDetailsIn(Schema):
     pincode: Annotated[str, StringConstraints(strip_whitespace=True, pattern=PINCODE_RE)]
     notes: Annotated[str, StringConstraints(strip_whitespace=True, max_length=500)] = ""
 
+    @field_validator("email", mode="before")
+    @classmethod
+    def _blank_is_none(cls, v: object) -> object:
+        return None if v is None or (isinstance(v, str) and not v.strip()) else v
+
     @field_validator("email")
     @classmethod
-    def _lower(cls, v: str) -> str:
-        return v.lower()
+    def _lower(cls, v: str | None) -> str | None:
+        return v.lower() if v else None
 
 
 class OrderCreateIn(QuoteIn):
